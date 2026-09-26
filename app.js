@@ -1,16 +1,13 @@
-// Lógica del Controlador de Presupuesto - Tarjeta de Crédito (Actualizada v2)
+// Lógica del Controlador de Presupuesto - Tarjeta de Crédito (v2.1 Fix)
 
-// Constantes y Claves de LocalStorage
 const DEFAULT_BUDGET = 300000;
 const BANK_LIMIT = 500000;
 const STORAGE_EXPENSES_KEY = 'credit_budget_app_data_v1';
 const STORAGE_LIMIT_KEY = 'credit_budget_app_limit_v1';
 
-// Estado Global de la Aplicación
 let personalBudget = DEFAULT_BUDGET;
 let expenses = [];
 
-// Elementos del DOM
 const expenseForm = document.getElementById('expenseForm');
 const expenseNameInput = document.getElementById('expenseName');
 const expenseAmountInput = document.getElementById('expenseAmount');
@@ -42,6 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
 });
 
+// Limpiador Inteligente de Números (Acepta 300.000, 300000, $300.000, etc.)
+function parseCleanAmount(rawInput) {
+    if (!rawInput) return NaN;
+    // Remueve puntos, comas, signos de pesos y espacios
+    const cleanDigits = String(rawInput).replace(/[^0-9]/g, '');
+    if (!cleanDigits) return NaN;
+    return parseInt(cleanDigits, 10);
+}
+
 // Formateador de Moneda Chilena (CLP)
 function formatCLP(amount) {
     const isNegative = amount < 0;
@@ -66,13 +72,11 @@ function saveBudgetToStorage() {
 }
 
 function loadFromLocalStorage() {
-    // Cargar Gastos
     const savedExpenses = localStorage.getItem(STORAGE_EXPENSES_KEY);
     if (savedExpenses) {
         try { expenses = JSON.parse(savedExpenses); } catch (e) { expenses = []; }
     }
 
-    // Cargar Presupuesto Personal Editable
     const savedBudget = localStorage.getItem(STORAGE_LIMIT_KEY);
     if (savedBudget && !isNaN(parseFloat(savedBudget))) {
         personalBudget = parseFloat(savedBudget);
@@ -80,25 +84,19 @@ function loadFromLocalStorage() {
         personalBudget = DEFAULT_BUDGET;
     }
 
-    // Cargar valor actual en el input
-    budgetInput.value = personalBudget;
+    budgetInput.value = formatCLP(personalBudget);
 }
 
 // Actualización Completa de la Interfaz (UI)
 function updateUI() {
-    // 1. Calcular Totales Matemáticos
     const totalSpent = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const availablePersonal = personalBudget - totalSpent;
     const availableBank = BANK_LIMIT - totalSpent;
 
-    // Porcentaje del presupuesto gastado y disponible
     const rawSpentPercent = (totalSpent / personalBudget) * 100;
     const percentUsedBar = Math.min(Math.round(rawSpentPercent), 100);
-    
-    // Porcentaje de presupuesto DISPONIBLE restante
     const availablePercent = (availablePersonal / personalBudget) * 100;
 
-    // 2. Renderizar Valores en Pantalla
     availableBudgetEl.textContent = formatCLP(availablePersonal);
     personalLimitDisplayEl.textContent = formatCLP(personalBudget);
     totalSpentEl.textContent = formatCLP(totalSpent);
@@ -108,41 +106,35 @@ function updateUI() {
     progressPercent.textContent = `${Math.round(rawSpentPercent)}%`;
     progressBar.style.width = `${percentUsedBar}%`;
 
-    // 3. Reglas Exactas de Alertas por Porcentaje Disponible:
-    // • 50% o más disponible -> "Presupuesto Sano" (Verde)
-    // • Entre 35% y 49% disponible -> "¡Precaución!" (Amarillo/Naranja)
-    // • Menos del 35% disponible -> "¡Queda poco presupuesto!" (Rojo)
-    // • Saldo Negativo (< 0) -> "¡EXCEDIDO! Superaste tu tope personal" (Rojo Alerta)
-    
     availableCard.classList.remove('status-green', 'status-yellow', 'status-red');
 
+    // Reglas Exactas de Alertas por Porcentaje Disponible:
+    // • 50% o más disponible -> "Presupuesto Sano" (Verde)
+    // • Entre 35% y 49% disponible -> "¡Precaución!" (Amarillo)
+    // • Menos del 35% disponible -> "¡Queda poco presupuesto!" (Rojo)
+    // • Saldo Negativo (< 0) -> "¡EXCEDIDO! Superaste tu tope personal" (Rojo)
     if (availablePersonal < 0) {
-        // Excedido
         availableCard.classList.add('status-red');
         statusIcon.className = 'fa-solid fa-circle-exclamation';
         statusText.textContent = '¡EXCEDIDO! Superaste tu tope personal';
         progressBar.style.background = 'var(--color-red)';
     } else if (availablePercent < 35) {
-        // Menos del 35% disponible
         availableCard.classList.add('status-red');
         statusIcon.className = 'fa-solid fa-triangle-exclamation';
         statusText.textContent = '¡Queda poco presupuesto!';
         progressBar.style.background = 'var(--color-red)';
     } else if (availablePercent < 50) {
-        // Entre 35% y 49% disponible
         availableCard.classList.add('status-yellow');
         statusIcon.className = 'fa-solid fa-triangle-exclamation';
         statusText.textContent = '¡Precaución!';
         progressBar.style.background = 'var(--color-yellow)';
     } else {
-        // 50% o más disponible
         availableCard.classList.add('status-green');
         statusIcon.className = 'fa-solid fa-circle-check';
         statusText.textContent = 'Presupuesto Sano';
         progressBar.style.background = 'var(--color-green)';
     }
 
-    // 4. Renderizar Lista de Movimientos
     renderHistory();
 }
 
@@ -180,31 +172,32 @@ function renderHistory() {
     });
 }
 
-// Evento: Actualizar Presupuesto Inicial Editable
+// Evento: Actualizar Presupuesto Inicial Editable (Limpia puntos/símbolos)
 budgetForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const newBudget = parseFloat(budgetInput.value);
+    const newBudget = parseCleanAmount(budgetInput.value);
 
     if (isNaN(newBudget) || newBudget <= 0) {
-        alert('Por favor ingresa un presupuesto inicial válido mayor a 0.');
+        alert('Por favor ingresa un presupuesto válido (ej: 300000 o 300.000).');
         return;
     }
 
     personalBudget = newBudget;
+    budgetInput.value = formatCLP(personalBudget);
     saveBudgetToStorage();
     updateUI();
 });
 
-// Evento: Agregar Nueva Compra
+// Evento: Agregar Nueva Compra (Limpia puntos/símbolos)
 expenseForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const name = expenseNameInput.value.trim();
-    const amount = parseFloat(expenseAmountInput.value);
+    const amount = parseCleanAmount(expenseAmountInput.value);
 
     if (!name || isNaN(amount) || amount <= 0) {
-        alert('Por favor ingresa un nombre y monto válido.');
+        alert('Por favor ingresa un concepto y un monto válido (ej: 25000 o 25.000).');
         return;
     }
 
