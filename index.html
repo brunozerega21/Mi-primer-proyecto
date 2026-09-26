@@ -3,191 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bruno Zerega | Mis Redes Sociales</title>
+    <title>Controlador de Presupuesto | Tarjeta de Crédito</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome para Logos Oficiales de Redes Sociales -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Iconos FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-gradient: linear-gradient(90deg, #38bdf8, #818cf8);
-            --btn-bg: rgba(255, 255, 255, 0.06);
-            --btn-border: rgba(255, 255, 255, 0.12);
-            --btn-hover: rgba(56, 189, 248, 0.18);
-            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        body.light-mode {
-            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --accent: #0284c7;
-            --accent-gradient: linear-gradient(90deg, #0284c7, #6366f1);
-            --btn-bg: #ffffff;
-            --btn-border: #cbd5e1;
-            --btn-hover: rgba(2, 132, 199, 0.1);
-            --shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.3s, color 0.3s, border-color 0.3s; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--btn-bg);
-            border: 1px solid var(--btn-border);
-            color: var(--text-main);
-            padding: 10px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
-        }
-        .theme-toggle:hover { border-color: var(--accent); }
-
-        .container { max-width: 420px; width: 100%; }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--btn-border);
-            border-radius: 24px;
-            padding: 45px 28px;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        /* Foto de perfil re-centrada verticalmente en el rostro de Bruno */
-        .avatar-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            object-position: center 30%;
-            border: 3px solid var(--accent);
-            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.35);
-            margin: 0 auto 18px;
-            display: block;
-        }
-
-        h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-        .subtitle { color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 28px; }
-
-        .links-list { display: flex; flex-direction: column; gap: 14px; }
-
-        .link-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--btn-bg);
-            border: 1px solid var(--btn-border);
-            padding: 16px 24px;
-            border-radius: 16px;
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-        }
-
-        .link-item:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent);
-            background: var(--btn-hover);
-        }
-
-        .link-label { display: flex; align-items: center; gap: 14px; }
-
-        .brand-icon { font-size: 22px; width: 24px; text-align: center; }
-        .fa-facebook { color: #1877F2; }
-        .fa-instagram {
-            background: -webkit-linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .fa-linkedin { color: #0A66C2; }
-        .fa-github { color: var(--text-main); }
-
-        .arrow { font-size: 16px; color: var(--accent); }
-
-        footer { margin-top: 28px; font-size: 12px; color: var(--text-muted); opacity: 0.7; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="app-container">
+        <!-- Encabezado de la Aplicación -->
+        <header class="app-header">
+            <div class="header-icon"><i class="fa-solid fa-wallet"></i></div>
+            <div>
+                <h1>Control de Presupuesto</h1>
+                <p class="subtitle">Tarjeta de Crédito • Límite Personal</p>
+            </div>
+        </header>
 
-    <button class="theme-toggle" id="themeBtn">🌙 Modo Oscuro</button>
-
-    <div class="container">
-        <div class="card">
-            <!-- Foto con encuadre re-centrado verticalmente -->
-            <img src="foto2_bruno_perfect.jpg" alt="Bruno Zerega" class="avatar-img">
-
-            <h1>Bruno Zerega</h1>
-            <div class="subtitle">Mis Redes Sociales</div>
-
-            <div class="links-list">
-                <a href="https://www.instagram.com/brunovittorioo/" target="_blank" class="link-item">
-                    <span class="link-label">
-                        <i class="fa-brands fa-instagram brand-icon"></i> Instagram
-                    </span>
-                    <span class="arrow">↗</span>
-                </a>
-
-                <a href="https://www.linkedin.com/in/bruno-zerega-4ab3b822b" target="_blank" class="link-item">
-                    <span class="link-label">
-                        <i class="fa-brands fa-linkedin brand-icon"></i> LinkedIn
-                    </span>
-                    <span class="arrow">↗</span>
-                </a>
-
-                <a href="https://www.facebook.com" target="_blank" class="link-item">
-                    <span class="link-label">
-                        <i class="fa-brands fa-facebook brand-icon"></i> Facebook
-                    </span>
-                    <span class="arrow">↗</span>
-                </a>
-
-                <a href="https://github.com/brunozerega21" target="_blank" class="link-item">
-                    <span class="link-label">
-                        <i class="fa-brands fa-github brand-icon"></i> GitHub
-                    </span>
-                    <span class="arrow">↗</span>
-                </a>
+        <!-- Dashboard de Resumen Financiero -->
+        <section class="dashboard">
+            <!-- Tarjeta Principal: Disponible Personal (Métrica Estrella) -->
+            <div class="card card-highlight" id="availableCard">
+                <span class="card-label">Presupuesto Disponible</span>
+                <h2 class="card-value" id="availableBudget">$300.000</h2>
+                <div class="status-badge" id="statusBadge">
+                    <i class="fa-solid fa-circle-check" id="statusIcon"></i>
+                    <span id="statusText">Presupuesto Sano</span>
+                </div>
             </div>
 
-            <footer>© 2026 Bruno Zerega</footer>
-        </div>
+            <!-- Tarjetas Secundarias -->
+            <div class="grid-2">
+                <div class="card">
+                    <span class="card-label"><i class="fa-solid fa-bullseye"></i> Mi Tope Personal</span>
+                    <h3 class="card-subvalue" id="personalLimit">$300.000</h3>
+                    <small class="card-note">Destinado de mi sueldo</small>
+                </div>
+
+                <div class="card">
+                    <span class="card-label"><i class="fa-solid fa-cart-shopping"></i> Total Gastado</span>
+                    <h3 class="card-subvalue text-spent" id="totalSpent">$0</h3>
+                    <small class="card-note" id="spentCount">0 compras registradas</small>
+                </div>
+            </div>
+
+            <!-- Barra de Progreso del Presupuesto Personal -->
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Consumo de Presupuesto Personal</span>
+                    <strong id="progressPercent">0%</strong>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Banner Informativo del Banco ($500.000) -->
+            <div class="bank-info-banner">
+                <div class="bank-icon"><i class="fa-solid fa-building-columns"></i></div>
+                <div class="bank-text">
+                    <span>Cupo bancario real restante ($500.000 tope):</span>
+                    <strong id="bankAvailable">$500.000</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario de Agregar Compra -->
+        <section class="card form-section">
+            <h3><i class="fa-solid fa-plus-circle"></i> Registrar Nueva Compra</h3>
+            <form id="expenseForm">
+                <div class="form-group">
+                    <label for="expenseName">Nombre o Concepto de la Compra</label>
+                    <input type="text" id="expenseName" placeholder="Ej: Supermercado, Netflix, Bencina" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="expenseAmount">Monto ($ CLP)</label>
+                    <input type="number" id="expenseAmount" placeholder="Ej: 25000" min="1" step="1" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="addBtn">
+                    <i class="fa-solid fa-cart-plus"></i> Agregar Gasto
+                </button>
+            </form>
+        </section>
+
+        <!-- Historial de Movimientos -->
+        <section class="card history-section">
+            <div class="history-header">
+                <h3><i class="fa-solid fa-receipt"></i> Historial de Compras</h3>
+                <button id="clearMonthBtn" class="btn-text-danger" title="Reiniciar mes">
+                    <i class="fa-solid fa-rotate-left"></i> Reiniciar Mes
+                </button>
+            </div>
+
+            <div id="emptyHistory" class="empty-state">
+                <i class="fa-solid fa-receipt"></i>
+                <p>No tienes gastos registrados este mes.</p>
+                <small>Ingresa una compra arriba para comenzar el control.</small>
+            </div>
+
+            <ul class="history-list" id="historyList"></ul>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Controlador de Presupuesto Personal • Datos guardados en tu dispositivo</p>
+        </footer>
     </div>
 
-    <script>
-        const themeBtn = document.getElementById('themeBtn');
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            themeBtn.textContent = document.body.classList.contains('light-mode') ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
