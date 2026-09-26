@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bruno Zerega | Linktree & Portafolio</title>
+    <title>Bruno Zerega | Mis Redes Sociales</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -45,10 +45,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 20px;
+            padding: 20px;
         }
 
-        /* Botón Flotante para cambiar de tema */
+        /* Botón Modo Oscuro / Claro */
         .theme-toggle {
             position: fixed;
             top: 20px;
@@ -65,44 +65,38 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 100;
         }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-        }
+        .theme-toggle:hover { border-color: var(--accent); }
 
-        .container {
-            max-width: 480px;
-            width: 100%;
-        }
+        .container { max-width: 420px; width: 100%; }
 
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             border: 1px solid var(--btn-border);
             border-radius: 24px;
-            padding: 40px 30px;
+            padding: 45px 28px;
             text-align: center;
             box-shadow: var(--shadow);
         }
 
         .avatar {
-            width: 95px;
-            height: 95px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             background: var(--accent-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
-            margin: 0 auto 20px;
+            font-size: 40px;
+            margin: 0 auto 18px;
             box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3);
         }
 
         h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-        .subtitle { color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; }
-        .bio { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 25px; }
+        .subtitle { color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 28px; }
 
-        /* Lista de Enlaces (Estilo Linktree) */
-        .links-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
+        /* Lista de Redes Sociales */
+        .links-list { display: flex; flex-direction: column; gap: 14px; }
 
         .link-item {
             display: flex;
@@ -110,7 +104,7 @@
             justify-content: space-between;
             background: var(--btn-bg);
             border: 1px solid var(--btn-border);
-            padding: 14px 22px;
+            padding: 16px 24px;
             border-radius: 16px;
             color: var(--text-main);
             text-decoration: none;
@@ -125,93 +119,56 @@
             background: var(--btn-hover);
         }
 
-        .link-icon { font-size: 18px; color: var(--accent); }
+        .link-label { display: flex; align-items: center; gap: 12px; }
+        .link-icon { font-size: 20px; }
+        .arrow { font-size: 16px; color: var(--accent); }
 
-        /* Sección de Proyectos */
-        .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-align: left;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .project-card {
-            background: var(--btn-bg);
-            border: 1px solid var(--btn-border);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: left;
-            margin-bottom: 12px;
-        }
-
-        .project-card h3 { font-size: 14px; margin-bottom: 4px; color: var(--accent); }
-        .project-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 0; }
-
-        footer { margin-top: 25px; font-size: 12px; color: var(--text-muted); opacity: 0.8; }
+        footer { margin-top: 28px; font-size: 12px; color: var(--text-muted); opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <!-- Botón de Modo Oscuro / Claro -->
+    <!-- Botón de Cambio de Tema -->
     <button class="theme-toggle" id="themeBtn">🌙 Modo Oscuro</button>
 
     <div class="container">
         <div class="card">
             <div class="avatar">👨‍💻</div>
             <h1>Bruno Zerega</h1>
-            <div class="subtitle">Desarrollador & Aprendiz Tech</div>
-            <p class="bio">¡Hola! Exploro el mundo del desarrollo web, Git, GitHub y la inteligencia artificial. Bienvenido a mi espacio interactivo personal.</p>
+            <div class="subtitle">Mis Redes Sociales</div>
 
-            <!-- Lista de Enlaces Interactivas -->
+            <!-- Botones de Redes Sociales -->
             <div class="links-list">
+                <a href="https://facebook.com" target="_blank" class="link-item">
+                    <span class="link-label"><span class="link-icon">📘</span> Facebook</span>
+                    <span class="arrow">↗</span>
+                </a>
+                
+                <a href="https://instagram.com" target="_blank" class="link-item">
+                    <span class="link-label"><span class="link-icon">📸</span> Instagram</span>
+                    <span class="arrow">↗</span>
+                </a>
+
+                <a href="https://linkedin.com" target="_blank" class="link-item">
+                    <span class="link-label"><span class="link-icon">💼</span> LinkedIn</span>
+                    <span class="arrow">↗</span>
+                </a>
+
                 <a href="https://github.com/brunozerega21" target="_blank" class="link-item">
-                    <span>🐙 Mi Perfil de GitHub</span>
-                    <span class="link-icon">↗</span>
-                </a>
-                <a href="https://github.com/brunozerega21/Mi-primer-proyecto" target="_blank" class="link-item">
-                    <span>🚀 Código Fuente de este Sitio</span>
-                    <span class="link-icon">↗</span>
+                    <span class="link-label"><span class="link-icon">🐙</span> GitHub</span>
+                    <span class="arrow">↗</span>
                 </a>
             </div>
 
-            <!-- Sección de Logros -->
-            <div class="section-title">✨ Mis Logros Recientes</div>
-            
-            <div class="project-card">
-                <h3>01. Primer Repositorio en GitHub</h3>
-                <p>Aprendí el flujo de trabajo con Git local y conecté mi cuenta en la nube.</p>
-            </div>
-
-            <div class="project-card">
-                <h3>02. Despliegue con GitHub Pages</h3>
-                <p>Publicación de esta web en vivo con dominio público gratuito.</p>
-            </div>
-
-            <div class="project-card">
-                <h3>03. Interruptor de Modo Oscuro con JavaScript</h3>
-                <p>Implementación de manipulación del DOM y CSS dinámico.</p>
-            </div>
-
-            <footer>© 2026 Bruno Zerega • Creado con HTML, CSS & JavaScript</footer>
+            <footer>© 2026 Bruno Zerega</footer>
         </div>
     </div>
 
-    <!-- Código de JavaScript para la interactividad -->
     <script>
         const themeBtn = document.getElementById('themeBtn');
-        
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
-            
-            if (document.body.classList.contains('light-mode')) {
-                themeBtn.textContent = '☀️ Modo Claro';
-            } else {
-                themeBtn.textContent = '🌙 Modo Oscuro';
-            }
+            themeBtn.textContent = document.body.classList.contains('light-mode') ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
         });
     </script>
 </body>
