@@ -12,6 +12,11 @@
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
 
+    <!-- Favicon e Icono para la Pantalla de Inicio en Celulares (iOS & Android) -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,7 +29,9 @@
         <!-- Encabezado de la Aplicación -->
         <header class="app-header">
             <div class="header-main">
-                <div class="header-icon"><i class="fa-solid fa-wallet"></i></div>
+                <div class="header-icon">
+                    <img src="icon.png" alt="Logo Presupuesto" class="app-logo-img">
+                </div>
                 <div>
                     <h1>Control de Presupuesto</h1>
                     <p class="subtitle">Tarjeta de Crédito & Transferencias</p>
