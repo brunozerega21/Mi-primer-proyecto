@@ -1,11 +1,13 @@
-// Lógica del Controlador de Presupuesto - Tarjeta de Crédito
+// Lógica del Controlador de Presupuesto - Tarjeta de Crédito (Actualizada v2)
 
-// Reglas de Negocio Principales
-const PERSONAL_LIMIT = 300000; // Tope personal mensual estricto
-const BANK_LIMIT = 500000;     // Cupo bancario real total
-const STORAGE_KEY = 'credit_budget_app_data_v1';
+// Constantes y Claves de LocalStorage
+const DEFAULT_BUDGET = 300000;
+const BANK_LIMIT = 500000;
+const STORAGE_EXPENSES_KEY = 'credit_budget_app_data_v1';
+const STORAGE_LIMIT_KEY = 'credit_budget_app_limit_v1';
 
-// Estado Inicial de la Aplicación
+// Estado Global de la Aplicación
+let personalBudget = DEFAULT_BUDGET;
 let expenses = [];
 
 // Elementos del DOM
@@ -13,7 +15,11 @@ const expenseForm = document.getElementById('expenseForm');
 const expenseNameInput = document.getElementById('expenseName');
 const expenseAmountInput = document.getElementById('expenseAmount');
 
+const budgetForm = document.getElementById('budgetForm');
+const budgetInput = document.getElementById('budgetInput');
+
 const availableBudgetEl = document.getElementById('availableBudget');
+const personalLimitDisplayEl = document.getElementById('personalLimitDisplay');
 const totalSpentEl = document.getElementById('totalSpent');
 const spentCountEl = document.getElementById('spentCount');
 const bankAvailableEl = document.getElementById('bankAvailable');
@@ -30,7 +36,7 @@ const historyList = document.getElementById('historyList');
 const emptyHistory = document.getElementById('emptyHistory');
 const clearMonthBtn = document.getElementById('clearMonthBtn');
 
-// Cargar Datos al Iniciar la Aplicación
+// Inicialización de la App
 document.addEventListener('DOMContentLoaded', () => {
     loadFromLocalStorage();
     updateUI();
@@ -50,71 +56,97 @@ function formatCLP(amount) {
     return isNegative ? `-${formatted}` : formatted;
 }
 
-// Guardar y Cargar de LocalStorage
-function saveToLocalStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+// Cargar y Guardar en LocalStorage
+function saveExpensesToStorage() {
+    localStorage.setItem(STORAGE_EXPENSES_KEY, JSON.stringify(expenses));
+}
+
+function saveBudgetToStorage() {
+    localStorage.setItem(STORAGE_LIMIT_KEY, personalBudget.toString());
 }
 
 function loadFromLocalStorage() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        try {
-            expenses = JSON.parse(saved);
-        } catch (e) {
-            expenses = [];
-        }
+    // Cargar Gastos
+    const savedExpenses = localStorage.getItem(STORAGE_EXPENSES_KEY);
+    if (savedExpenses) {
+        try { expenses = JSON.parse(savedExpenses); } catch (e) { expenses = []; }
     }
+
+    // Cargar Presupuesto Personal Editable
+    const savedBudget = localStorage.getItem(STORAGE_LIMIT_KEY);
+    if (savedBudget && !isNaN(parseFloat(savedBudget))) {
+        personalBudget = parseFloat(savedBudget);
+    } else {
+        personalBudget = DEFAULT_BUDGET;
+    }
+
+    // Cargar valor actual en el input
+    budgetInput.value = personalBudget;
 }
 
 // Actualización Completa de la Interfaz (UI)
 function updateUI() {
-    // 1. Calcular Totales
+    // 1. Calcular Totales Matemáticos
     const totalSpent = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-    const availablePersonal = PERSONAL_LIMIT - totalSpent;
+    const availablePersonal = personalBudget - totalSpent;
     const availableBank = BANK_LIMIT - totalSpent;
-    
-    // Calcular Porcentaje consumido del presupuesto personal ($300.000)
-    const rawPercent = (totalSpent / PERSONAL_LIMIT) * 100;
-    const percentUsed = Math.min(Math.round(rawPercent), 100);
 
-    // 2. Renderizar Valores Numéricos
+    // Porcentaje del presupuesto gastado y disponible
+    const rawSpentPercent = (totalSpent / personalBudget) * 100;
+    const percentUsedBar = Math.min(Math.round(rawSpentPercent), 100);
+    
+    // Porcentaje de presupuesto DISPONIBLE restante
+    const availablePercent = (availablePersonal / personalBudget) * 100;
+
+    // 2. Renderizar Valores en Pantalla
     availableBudgetEl.textContent = formatCLP(availablePersonal);
+    personalLimitDisplayEl.textContent = formatCLP(personalBudget);
     totalSpentEl.textContent = formatCLP(totalSpent);
     bankAvailableEl.textContent = formatCLP(availableBank);
     
     spentCountEl.textContent = `${expenses.length} ${expenses.length === 1 ? 'compra registrada' : 'compras registradas'}`;
-    progressPercent.textContent = `${Math.round(rawPercent)}%`;
-    progressBar.style.width = `${percentUsed}%`;
+    progressPercent.textContent = `${Math.round(rawSpentPercent)}%`;
+    progressBar.style.width = `${percentUsedBar}%`;
 
-    // 3. Aplicar Lógica de Colores e Indicadores de Estado
-    availableCard.classList.remove('status-green', 'status-yellow', 'status-red');
+    // 3. Reglas Exactas de Alertas por Porcentaje Disponible:
+    // • 50% o más disponible -> "Presupuesto Sano" (Verde)
+    // • Entre 35% y 49% disponible -> "¡Precaución!" (Amarillo/Naranja)
+    // • Menos del 35% disponible -> "¡Queda poco presupuesto!" (Rojo)
+    // • Saldo Negativo (< 0) -> "¡EXCEDIDO! Superaste tu tope personal" (Rojo Alerta)
     
-    // Regla de Semaforización:
-    // Verde: Queda más de $60.000 (20% del presupuesto)
-    // Amarillo: Queda entre $0 y $59.999 (Alerta de precaución)
-    // Rojo: Menor a $0 (Excedido / Sobrepasó los $300.000)
-    if (availablePersonal >= 60000) {
-        availableCard.classList.add('status-green');
-        statusIcon.className = 'fa-solid fa-circle-check';
-        statusText.textContent = 'Presupuesto Sano';
-        progressBar.style.background = 'var(--color-green)';
-    } else if (availablePersonal >= 0) {
-        availableCard.classList.add('status-yellow');
-        statusIcon.className = 'fa-solid fa-triangle-exclamation';
-        statusText.textContent = '¡Precaución! Queda poco presupuesto';
-        progressBar.style.background = 'var(--color-yellow)';
-    } else {
+    availableCard.classList.remove('status-green', 'status-yellow', 'status-red');
+
+    if (availablePersonal < 0) {
+        // Excedido
         availableCard.classList.add('status-red');
         statusIcon.className = 'fa-solid fa-circle-exclamation';
         statusText.textContent = '¡EXCEDIDO! Superaste tu tope personal';
         progressBar.style.background = 'var(--color-red)';
+    } else if (availablePercent < 35) {
+        // Menos del 35% disponible
+        availableCard.classList.add('status-red');
+        statusIcon.className = 'fa-solid fa-triangle-exclamation';
+        statusText.textContent = '¡Queda poco presupuesto!';
+        progressBar.style.background = 'var(--color-red)';
+    } else if (availablePercent < 50) {
+        // Entre 35% y 49% disponible
+        availableCard.classList.add('status-yellow');
+        statusIcon.className = 'fa-solid fa-triangle-exclamation';
+        statusText.textContent = '¡Precaución!';
+        progressBar.style.background = 'var(--color-yellow)';
+    } else {
+        // 50% o más disponible
+        availableCard.classList.add('status-green');
+        statusIcon.className = 'fa-solid fa-circle-check';
+        statusText.textContent = 'Presupuesto Sano';
+        progressBar.style.background = 'var(--color-green)';
     }
 
-    // 4. Renderizar Lista de Historial
+    // 4. Renderizar Lista de Movimientos
     renderHistory();
 }
 
-// Renderizar la lista de historial
+// Renderizar Historial
 function renderHistory() {
     historyList.innerHTML = '';
 
@@ -127,7 +159,6 @@ function renderHistory() {
     emptyHistory.style.display = 'none';
     historyList.style.display = 'flex';
 
-    // Mostrar los más recientes primero
     const reversedExpenses = [...expenses].reverse();
 
     reversedExpenses.forEach(item => {
@@ -149,7 +180,23 @@ function renderHistory() {
     });
 }
 
-// Agregar Nuevo Gasto
+// Evento: Actualizar Presupuesto Inicial Editable
+budgetForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const newBudget = parseFloat(budgetInput.value);
+
+    if (isNaN(newBudget) || newBudget <= 0) {
+        alert('Por favor ingresa un presupuesto inicial válido mayor a 0.');
+        return;
+    }
+
+    personalBudget = newBudget;
+    saveBudgetToStorage();
+    updateUI();
+});
+
+// Evento: Agregar Nueva Compra
 expenseForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -174,18 +221,17 @@ expenseForm.addEventListener('submit', (e) => {
     };
 
     expenses.push(newExpense);
-    saveToLocalStorage();
+    saveExpensesToStorage();
     updateUI();
 
-    // Resetear formulario
     expenseForm.reset();
     expenseNameInput.focus();
 });
 
-// Eliminar Gasto por ID
+// Eliminar Compra por ID
 function deleteExpense(id) {
     expenses = expenses.filter(item => item.id !== id);
-    saveToLocalStorage();
+    saveExpensesToStorage();
     updateUI();
 }
 
@@ -195,20 +241,12 @@ clearMonthBtn.addEventListener('click', () => {
 
     if (confirm('¿Estás seguro de reiniciar el mes? Se borrarán todos los gastos registrados.')) {
         expenses = [];
-        saveToLocalStorage();
+        saveExpensesToStorage();
         updateUI();
     }
 });
 
-// Helper para prevenir vulnerabilidades de texto (XSS)
+// Helper XSS
 function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, 
-        tag => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            "'": '&#39;',
-            '"': '&quot;'
-        }[tag] || tag)
-    );
+    return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
 }

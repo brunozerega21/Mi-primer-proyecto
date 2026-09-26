@@ -15,102 +15,135 @@
     <div class="app-container">
         <!-- Encabezado de la Aplicación -->
         <header class="app-header">
-            <div class="header-icon"><i class="fa-solid fa-wallet"></i></div>
-            <div>
-                <h1>Control de Presupuesto</h1>
-                <p class="subtitle">Tarjeta de Crédito • Límite Personal</p>
+            <div class="header-main">
+                <div class="header-icon"><i class="fa-solid fa-wallet"></i></div>
+                <div>
+                    <h1>Control de Presupuesto</h1>
+                    <p class="subtitle">Tarjeta de Crédito • Gestión Inteligente</p>
+                </div>
             </div>
         </header>
 
-        <!-- Dashboard de Resumen Financiero -->
-        <section class="dashboard">
-            <!-- Tarjeta Principal: Disponible Personal (Métrica Estrella) -->
-            <div class="card card-highlight" id="availableCard">
-                <span class="card-label">Presupuesto Disponible</span>
-                <h2 class="card-value" id="availableBudget">$300.000</h2>
-                <div class="status-badge" id="statusBadge">
-                    <i class="fa-solid fa-circle-check" id="statusIcon"></i>
-                    <span id="statusText">Presupuesto Sano</span>
-                </div>
+        <!-- Estructura Principal Adaptable (Grid para Desktop, Columna para Móvil) -->
+        <div class="main-layout">
+
+            <!-- COLUMNA IZQUIERDA (Dashboard & Registro) -->
+            <div class="column-left">
+
+                <!-- Dashboard de Resumen Financiero -->
+                <section class="dashboard">
+                    <!-- Tarjeta Principal: Presupuesto Disponible -->
+                    <div class="card card-highlight" id="availableCard">
+                        <span class="card-label">Presupuesto Disponible</span>
+                        <h2 class="card-value" id="availableBudget">$300.000</h2>
+                        <div class="status-badge" id="statusBadge">
+                            <i class="fa-solid fa-circle-check" id="statusIcon"></i>
+                            <span id="statusText">Presupuesto Sano</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas Secundarias -->
+                    <div class="grid-2">
+                        <div class="card">
+                            <span class="card-label"><i class="fa-solid fa-bullseye"></i> Mi Tope Personal</span>
+                            <h3 class="card-subvalue" id="personalLimitDisplay">$300.000</h3>
+                            <small class="card-note">Definido para el mes</small>
+                        </div>
+
+                        <div class="card">
+                            <span class="card-label"><i class="fa-solid fa-cart-shopping"></i> Total Gastado</span>
+                            <h3 class="card-subvalue text-spent" id="totalSpent">$0</h3>
+                            <small class="card-note" id="spentCount">0 compras registradas</small>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Progreso del Presupuesto Personal -->
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span>Consumo del Presupuesto</span>
+                            <strong id="progressPercent">0%</strong>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+
+                    <!-- Banner Informativo del Banco ($500.000) -->
+                    <div class="bank-info-banner">
+                        <div class="bank-icon"><i class="fa-solid fa-building-columns"></i></div>
+                        <div class="bank-text">
+                            <span>Cupo bancario real restante ($500.000 tope):</span>
+                            <strong id="bankAvailable">$500.000</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formulario de Agregar Compra -->
+                <section class="card form-section">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Registrar Nueva Compra</h3>
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label for="expenseName">Nombre o Concepto de la Compra</label>
+                            <input type="text" id="expenseName" placeholder="Ej: Supermercado, Netflix, Bencina" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expenseAmount">Monto ($ CLP)</label>
+                            <input type="number" id="expenseAmount" placeholder="Ej: 25000" min="1" step="1" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="addBtn">
+                            <i class="fa-solid fa-cart-plus"></i> Agregar Gasto
+                        </button>
+                    </form>
+                </section>
+
             </div>
 
-            <!-- Tarjetas Secundarias -->
-            <div class="grid-2">
-                <div class="card">
-                    <span class="card-label"><i class="fa-solid fa-bullseye"></i> Mi Tope Personal</span>
-                    <h3 class="card-subvalue" id="personalLimit">$300.000</h3>
-                    <small class="card-note">Destinado de mi sueldo</small>
-                </div>
+            <!-- COLUMNA DERECHA (Ajuste de Presupuesto & Historial) -->
+            <div class="column-right">
 
-                <div class="card">
-                    <span class="card-label"><i class="fa-solid fa-cart-shopping"></i> Total Gastado</span>
-                    <h3 class="card-subvalue text-spent" id="totalSpent">$0</h3>
-                    <small class="card-note" id="spentCount">0 compras registradas</small>
-                </div>
+                <!-- Formulario de Edición de Presupuesto Mensual -->
+                <section class="card config-section">
+                    <h3><i class="fa-solid fa-sliders"></i> Presupuesto Mensual Editable</h3>
+                    <form id="budgetForm" class="budget-form">
+                        <div class="form-group">
+                            <label for="budgetInput">Definir Presupuesto Inicial ($ CLP)</label>
+                            <div class="input-with-button">
+                                <input type="number" id="budgetInput" placeholder="Ej: 300000" min="1" step="1000" required>
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Historial de Movimientos -->
+                <section class="card history-section">
+                    <div class="history-header">
+                        <h3><i class="fa-solid fa-receipt"></i> Historial de Compras</h3>
+                        <button id="clearMonthBtn" class="btn-text-danger" title="Reiniciar mes">
+                            <i class="fa-solid fa-rotate-left"></i> Reiniciar Mes
+                        </button>
+                    </div>
+
+                    <div id="emptyHistory" class="empty-state">
+                        <i class="fa-solid fa-receipt"></i>
+                        <p>No tienes gastos registrados este mes.</p>
+                        <small>Ingresa una compra a la izquierda para comenzar.</small>
+                    </div>
+
+                    <ul class="history-list" id="historyList"></ul>
+                </section>
+
             </div>
 
-            <!-- Barra de Progreso del Presupuesto Personal -->
-            <div class="progress-section">
-                <div class="progress-info">
-                    <span>Consumo de Presupuesto Personal</span>
-                    <strong id="progressPercent">0%</strong>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-            </div>
-
-            <!-- Banner Informativo del Banco ($500.000) -->
-            <div class="bank-info-banner">
-                <div class="bank-icon"><i class="fa-solid fa-building-columns"></i></div>
-                <div class="bank-text">
-                    <span>Cupo bancario real restante ($500.000 tope):</span>
-                    <strong id="bankAvailable">$500.000</strong>
-                </div>
-            </div>
-        </section>
-
-        <!-- Formulario de Agregar Compra -->
-        <section class="card form-section">
-            <h3><i class="fa-solid fa-plus-circle"></i> Registrar Nueva Compra</h3>
-            <form id="expenseForm">
-                <div class="form-group">
-                    <label for="expenseName">Nombre o Concepto de la Compra</label>
-                    <input type="text" id="expenseName" placeholder="Ej: Supermercado, Netflix, Bencina" required autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label for="expenseAmount">Monto ($ CLP)</label>
-                    <input type="number" id="expenseAmount" placeholder="Ej: 25000" min="1" step="1" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary" id="addBtn">
-                    <i class="fa-solid fa-cart-plus"></i> Agregar Gasto
-                </button>
-            </form>
-        </section>
-
-        <!-- Historial de Movimientos -->
-        <section class="card history-section">
-            <div class="history-header">
-                <h3><i class="fa-solid fa-receipt"></i> Historial de Compras</h3>
-                <button id="clearMonthBtn" class="btn-text-danger" title="Reiniciar mes">
-                    <i class="fa-solid fa-rotate-left"></i> Reiniciar Mes
-                </button>
-            </div>
-
-            <div id="emptyHistory" class="empty-state">
-                <i class="fa-solid fa-receipt"></i>
-                <p>No tienes gastos registrados este mes.</p>
-                <small>Ingresa una compra arriba para comenzar el control.</small>
-            </div>
-
-            <ul class="history-list" id="historyList"></ul>
-        </section>
+        </div>
 
         <!-- Footer -->
         <footer class="app-footer">
-            <p>Controlador de Presupuesto Personal • Datos guardados en tu dispositivo</p>
+            <p>Controlador de Presupuesto Personal • Datos guardados en tu dispositivo (localStorage)</p>
         </footer>
     </div>
 

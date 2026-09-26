@@ -48,9 +48,10 @@ body {
     padding: 24px 16px;
 }
 
+/* Contenedor Principal Adaptable */
 .app-container {
-    max-width: 520px;
     width: 100%;
+    max-width: 520px; /* Ancho por defecto en móvil */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -59,9 +60,15 @@ body {
 /* Header */
 .app-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px;
+}
+
+.header-main {
+    display: flex;
     align-items: center;
     gap: 14px;
-    padding: 8px 4px;
 }
 
 .header-icon {
@@ -88,7 +95,20 @@ body {
     color: var(--text-secondary);
 }
 
-/* Dashboard Cards */
+/* Layout Principal (Por defecto Apilado para Celulares) */
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.column-left, .column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Dashboard & Cards */
 .dashboard {
     display: flex;
     flex-direction: column;
@@ -259,8 +279,8 @@ body {
     color: var(--text-primary);
 }
 
-/* Formulario */
-.form-section h3 {
+/* Formulario Presupuesto Editable */
+.config-section h3, .form-section h3 {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 16px;
@@ -270,12 +290,16 @@ body {
     color: var(--accent-blue);
 }
 
-#expenseForm {
+.input-with-button {
     display: flex;
-    flex-direction: column;
-    gap: 14px;
+    gap: 10px;
 }
 
+.input-with-button input {
+    flex: 1;
+}
+
+/* Inputs & Formulario */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -303,6 +327,13 @@ body {
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
+#expenseForm {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Botones */
 .btn {
     padding: 14px;
     border-radius: var(--radius-md);
@@ -325,6 +356,18 @@ body {
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 24px rgba(56, 189, 248, 0.35);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 12px 18px;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Historial */
@@ -380,6 +423,18 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-height: 460px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Custom scrollbar para la lista */
+.history-list::-webkit-scrollbar {
+    width: 6px;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
 }
 
 .history-item {
@@ -448,12 +503,29 @@ body {
     opacity: 0.7;
 }
 
-/* Responsivo para móviles */
-@media (max-width: 480px) {
-    .grid-2 {
-        grid-template-columns: 1fr;
+/* ======================================================
+   VISTA DE COMPUTADOR (DESKTOP): MEDIA QUERY >= 900px
+   Aprovecha todo el ancho disponible del monitor
+   ====================================================== */
+@media (min-width: 900px) {
+    body {
+        padding: 36px 40px;
     }
-    .card-value {
-        font-size: 32px;
+
+    .app-container {
+        max-width: 1200px; /* Expandir a pantalla ancha */
+        gap: 28px;
+    }
+
+    .app-header h1 {
+        font-size: 26px;
+    }
+
+    /* Diseño Grid de 2 Columnas */
+    .main-layout {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr; /* Columna izquierda ligeramente más ancha */
+        gap: 28px;
+        align-items: start;
     }
 }
