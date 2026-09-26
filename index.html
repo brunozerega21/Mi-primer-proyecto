@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Controlador de Presupuesto | Tarjeta de Crédito</title>
+    <title>Controlador de Presupuesto | Tarjeta & Transferencias</title>
 
-    <!-- PWA y Metadatos para Aplicación Móvil (Pantalla Completa en Celular) -->
+    <!-- PWA y Metadatos para Aplicación Móvil (Pantalla Completa) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Presupuesto">
@@ -27,7 +27,7 @@
                 <div class="header-icon"><i class="fa-solid fa-wallet"></i></div>
                 <div>
                     <h1>Control de Presupuesto</h1>
-                    <p class="subtitle">Tarjeta de Crédito • Gestión Inteligente</p>
+                    <p class="subtitle">Tarjeta de Crédito & Transferencias</p>
                 </div>
             </div>
         </header>
@@ -35,13 +35,14 @@
         <!-- Estructura Principal Adaptable -->
         <div class="main-layout">
 
-            <!-- COLUMNA IZQUIERDA (Dashboard & Registro) -->
+            <!-- COLUMNA IZQUIERDA (Dashboard & Formulario) -->
             <div class="column-left">
 
-                <!-- Dashboard de Resumen Financiero -->
+                <!-- Dashboard de Resumen Financiero Global -->
                 <section class="dashboard">
+                    <!-- Tarjeta Principal: Presupuesto Disponible Global -->
                     <div class="card card-highlight" id="availableCard">
-                        <span class="card-label">Presupuesto Disponible</span>
+                        <span class="card-label">Presupuesto Disponible Global</span>
                         <h2 class="card-value" id="availableBudget">$300.000</h2>
                         <div class="status-badge" id="statusBadge">
                             <i class="fa-solid fa-circle-check" id="statusIcon"></i>
@@ -49,23 +50,31 @@
                         </div>
                     </div>
 
-                    <div class="grid-2">
+                    <!-- Tarjetas Secundarias Desglosadas -->
+                    <div class="grid-3">
                         <div class="card">
-                            <span class="card-label"><i class="fa-solid fa-bullseye"></i> Mi Tope Personal</span>
+                            <span class="card-label"><i class="fa-solid fa-bullseye"></i> Tope Personal</span>
                             <h3 class="card-subvalue" id="personalLimitDisplay">$300.000</h3>
                             <small class="card-note">Definido para el mes</small>
                         </div>
 
                         <div class="card">
-                            <span class="card-label"><i class="fa-solid fa-cart-shopping"></i> Total Gastado</span>
-                            <h3 class="card-subvalue text-spent" id="totalSpent">$0</h3>
-                            <small class="card-note" id="spentCount">0 compras registradas</small>
+                            <span class="card-label"><i class="fa-solid fa-credit-card"></i> Gastos Tarjeta</span>
+                            <h3 class="card-subvalue text-spent" id="totalCreditSpent">$0</h3>
+                            <small class="card-note" id="creditCount">0 compras</small>
+                        </div>
+
+                        <div class="card">
+                            <span class="card-label"><i class="fa-solid fa-money-bill-transfer"></i> Transferencias</span>
+                            <h3 class="card-subvalue text-transfer" id="totalTransferSpent">$0</h3>
+                            <small class="card-note" id="transferCount">0 envíos</small>
                         </div>
                     </div>
 
+                    <!-- Barra de Progreso del Consumo Global -->
                     <div class="progress-section">
                         <div class="progress-info">
-                            <span>Consumo del Presupuesto</span>
+                            <span>Consumo Total de Presupuesto</span>
                             <strong id="progressPercent">0%</strong>
                         </div>
                         <div class="progress-bar-container">
@@ -73,18 +82,19 @@
                         </div>
                     </div>
 
+                    <!-- Banner Informativo del Banco ($500.000) -->
                     <div class="bank-info-banner">
                         <div class="bank-icon"><i class="fa-solid fa-building-columns"></i></div>
                         <div class="bank-text">
-                            <span>Cupo bancario real restante ($500.000 tope):</span>
+                            <span>Cupo bancario real restante de Tarjeta ($500.000 tope):</span>
                             <strong id="bankAvailable">$500.000</strong>
                         </div>
                     </div>
                 </section>
 
-                <!-- Formulario de Agregar Compra -->
+                <!-- Formulario de Compra con Tarjeta de Crédito -->
                 <section class="card form-section">
-                    <h3><i class="fa-solid fa-plus-circle"></i> Registrar Nueva Compra</h3>
+                    <h3><i class="fa-solid fa-credit-card"></i> Registrar Compra con Tarjeta</h3>
                     <form id="expenseForm">
                         <div class="form-group">
                             <label for="expenseName">Nombre o Concepto de la Compra</label>
@@ -97,17 +107,37 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary" id="addBtn">
-                            <i class="fa-solid fa-cart-plus"></i> Agregar Gasto
+                            <i class="fa-solid fa-cart-plus"></i> Agregar Compra
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Nuevo Formulario de Transferencias Bancarias -->
+                <section class="card form-section form-transfer-theme">
+                    <h3><i class="fa-solid fa-money-bill-transfer"></i> Registrar Nueva Transferencia</h3>
+                    <form id="transferForm">
+                        <div class="form-group">
+                            <label for="transferName">Destinatario o Concepto</label>
+                            <input type="text" id="transferName" placeholder="Ej: Arriendo, Gastos Comunes, Préstamo" required autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transferAmount">Monto Transferido ($ CLP)</label>
+                            <input type="text" id="transferAmount" inputmode="numeric" placeholder="Ej: 50.000 o 50000" required autocomplete="off">
+                        </div>
+
+                        <button type="submit" class="btn btn-transfer" id="addTransferBtn">
+                            <i class="fa-solid fa-paper-plane"></i> Registar Transferencia
                         </button>
                     </form>
                 </section>
 
             </div>
 
-            <!-- COLUMNA DERECHA (Ajuste de Presupuesto & Historial) -->
+            <!-- COLUMNA DERECHA (Configuración e Historiales) -->
             <div class="column-right">
 
-                <!-- Formulario de Edición de Presupuesto Mensual -->
+                <!-- Configuración del Presupuesto Mensual Editable -->
                 <section class="card config-section">
                     <h3><i class="fa-solid fa-sliders"></i> Presupuesto Mensual Editable</h3>
                     <form id="budgetForm" class="budget-form">
@@ -123,30 +153,47 @@
                     </form>
                 </section>
 
-                <!-- Historial de Movimientos -->
+                <!-- Historial de Compras con Tarjeta -->
                 <section class="card history-section">
                     <div class="history-header">
-                        <h3><i class="fa-solid fa-receipt"></i> Historial de Compras</h3>
-                        <button id="clearMonthBtn" class="btn-text-danger" title="Reiniciar mes">
-                            <i class="fa-solid fa-rotate-left"></i> Reiniciar Mes
+                        <h3><i class="fa-solid fa-receipt"></i> Historial Tarjeta de Crédito</h3>
+                        <button id="clearMonthBtn" class="btn-text-danger" title="Reiniciar compras">
+                            <i class="fa-solid fa-rotate-left"></i> Limpiar
                         </button>
                     </div>
 
                     <div id="emptyHistory" class="empty-state">
-                        <i class="fa-solid fa-receipt"></i>
-                        <p>No tienes gastos registrados este mes.</p>
-                        <small>Ingresa una compra a la izquierda para comenzar.</small>
+                        <i class="fa-solid fa-credit-card"></i>
+                        <p>Sin compras con tarjeta este mes.</p>
                     </div>
 
                     <ul class="history-list" id="historyList"></ul>
+                </section>
+
+                <!-- Historial de Transferencias -->
+                <section class="card history-section history-transfer-theme">
+                    <div class="history-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Historial de Transferencias</h3>
+                        <button id="clearTransfersBtn" class="btn-text-danger" title="Reiniciar transferencias">
+                            <i class="fa-solid fa-rotate-left"></i> Limpiar
+                        </button>
+                    </div>
+
+                    <div id="emptyTransfersHistory" class="empty-state">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        <p>Sin transferencias registradas este mes.</p>
+                    </div>
+
+                    <ul class="history-list" id="transfersList"></ul>
                 </section>
 
             </div>
 
         </div>
 
+        <!-- Footer -->
         <footer class="app-footer">
-            <p>Controlador de Presupuesto Personal • Datos guardados en tu dispositivo (localStorage)</p>
+            <p>Controlador de Presupuesto Personal • Tarjetas & Transferencias • Datos guardados en tu celular</p>
         </footer>
     </div>
 

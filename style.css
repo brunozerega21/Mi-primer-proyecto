@@ -1,4 +1,4 @@
-/* CSS Design System - Controlador de Presupuesto */
+/* CSS Design System - Controlador de Presupuesto & Transferencias */
 
 :root {
     --bg-dark: #0f172a;
@@ -10,7 +10,9 @@
     --text-secondary: #94a3b8;
     
     --accent-blue: #38bdf8;
+    --accent-purple: #818cf8;
     --accent-gradient: linear-gradient(90deg, #38bdf8, #818cf8);
+    --transfer-gradient: linear-gradient(90deg, #818cf8, #c084fc);
     
     /* Estados Financieros */
     --color-green: #22c55e;
@@ -95,7 +97,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Layout Principal (Por defecto Apilado para Celulares) */
+/* Layout Principal (Apilado para Celulares por Defecto) */
 .main-layout {
     display: flex;
     flex-direction: column;
@@ -203,20 +205,27 @@ body {
     50% { opacity: 0.7; }
 }
 
-/* Grid Secundario */
-.grid-2 {
+/* Grid Desglosado 3 Columnas */
+.grid-3 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 600px) {
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
 }
 
 .card-subvalue {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     margin: 4px 0;
 }
 
 .text-spent { color: var(--accent-blue); }
+.text-transfer { color: var(--accent-purple); }
 .card-note { font-size: 11px; color: var(--text-secondary); }
 
 /* Barra de Progreso */
@@ -279,7 +288,7 @@ body {
     color: var(--text-primary);
 }
 
-/* Formulario Presupuesto Editable */
+/* Formulario & Configuración */
 .config-section h3, .form-section h3 {
     font-size: 16px;
     font-weight: 700;
@@ -288,6 +297,10 @@ body {
     align-items: center;
     gap: 8px;
     color: var(--accent-blue);
+}
+
+.form-transfer-theme h3 {
+    color: var(--accent-purple);
 }
 
 .input-with-button {
@@ -299,7 +312,7 @@ body {
     flex: 1;
 }
 
-/* Inputs & Formulario */
+/* Inputs */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -327,7 +340,12 @@ body {
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
-#expenseForm {
+.form-transfer-theme input:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+#expenseForm, #transferForm {
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -358,6 +376,17 @@ body {
     box-shadow: 0 12px 24px rgba(56, 189, 248, 0.35);
 }
 
+.btn-transfer {
+    background: var(--transfer-gradient);
+    color: #0f172a;
+    box-shadow: 0 8px 20px rgba(129, 140, 248, 0.25);
+}
+
+.btn-transfer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(129, 140, 248, 0.35);
+}
+
 .btn-secondary {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
@@ -370,7 +399,7 @@ body {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Historial */
+/* Historiales */
 .history-header {
     display: flex;
     justify-content: space-between;
@@ -384,6 +413,10 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.history-transfer-theme .history-header h3 {
+    color: var(--accent-purple);
 }
 
 .btn-text-danger {
@@ -403,19 +436,19 @@ body {
 
 .empty-state {
     text-align: center;
-    padding: 30px 10px;
+    padding: 24px 10px;
     color: var(--text-secondary);
 }
 
 .empty-state i {
-    font-size: 36px;
-    margin-bottom: 10px;
+    font-size: 32px;
+    margin-bottom: 8px;
     opacity: 0.4;
 }
 
 .empty-state p {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13.5px;
+    font-weight: 500;
 }
 
 .history-list {
@@ -423,12 +456,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 460px;
+    max-height: 320px;
     overflow-y: auto;
     padding-right: 4px;
 }
 
-/* Custom scrollbar para la lista */
 .history-list::-webkit-scrollbar {
     width: 6px;
 }
@@ -503,17 +535,14 @@ body {
     opacity: 0.7;
 }
 
-/* ======================================================
-   VISTA DE COMPUTADOR (DESKTOP): MEDIA QUERY >= 900px
-   Aprovecha todo el ancho disponible del monitor
-   ====================================================== */
+/* VISTA DE COMPUTADOR (DESKTOP): MEDIA QUERY >= 900px */
 @media (min-width: 900px) {
     body {
         padding: 36px 40px;
     }
 
     .app-container {
-        max-width: 1200px; /* Expandir a pantalla ancha */
+        max-width: 1200px;
         gap: 28px;
     }
 
@@ -521,10 +550,9 @@ body {
         font-size: 26px;
     }
 
-    /* Diseño Grid de 2 Columnas */
     .main-layout {
         display: grid;
-        grid-template-columns: 1.1fr 0.9fr; /* Columna izquierda ligeramente más ancha */
+        grid-template-columns: 1.05fr 0.95fr;
         gap: 28px;
         align-items: start;
     }
